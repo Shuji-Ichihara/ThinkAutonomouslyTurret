@@ -1,7 +1,7 @@
 # ThinkAutonomouslyTurret
 ## Title 自律思考型固定砲台
 
-## Cording rule
+## Coding rule
 ### Naming rule
 |Public|private|protected|local|Function|
 |:--:|:--:|:--:|:--:|:--:|

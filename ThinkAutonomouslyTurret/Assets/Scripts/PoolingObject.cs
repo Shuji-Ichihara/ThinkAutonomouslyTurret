@@ -12,6 +12,6 @@ public class PoolingObject : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _transform.position = spawnPosition;
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 }

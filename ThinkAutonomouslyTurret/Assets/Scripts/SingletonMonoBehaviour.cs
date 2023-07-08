@@ -25,7 +25,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {
         // 他の GameObject にアタッチされているか調べる
         // アタッチされている場合は破棄する
-        if (this != _instance)
+        if (this != Instance)
         {
             Destroy(this);
             Debug.LogError(

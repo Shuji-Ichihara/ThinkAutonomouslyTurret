@@ -10,14 +10,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     // 制限時間
     [SerializeField]
     private float _setGameTime = 60.0f;
-    private float _gameTime = 0.0f;
-    public float GameTime => _gameTime;
+    private static float _gameTime = 0.0f;
+    public static float GameTime => _gameTime;
 
     new private void Awake()
     {
         InitGame();
-        BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
-        bulletPool.InitPoolBullet();
     }
 
     // Start is called before the first frame update
@@ -32,11 +30,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         CountDownGameTime();
     }
 
+    /// <summary>
+    /// ゲームに必要なオブジェクト群を生成
+    /// </summary>
     private void InitGame()
     {
         _canon = Instantiate(_canon, Vector3.up, Quaternion.identity);
+        BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
+        bulletPool.InitPoolBullet();
     }
 
+    /// <summary>
+    /// 制限時間のカウントダウン
+    /// </summary>
     private void CountDownGameTime()
     {
         _gameTime -= Time.deltaTime;

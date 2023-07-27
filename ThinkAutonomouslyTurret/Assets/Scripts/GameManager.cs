@@ -6,12 +6,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     // 大砲の Prefab
     [SerializeField]
-    private GameObject _canon = null;
+    private GameObject _cannon = null;
     // 制限時間
     [SerializeField]
     private float _setGameTime = 60.0f;
     private static float _gameTime = 0.0f;
     public static float GameTime => _gameTime;
+    // スコア
+    private int _gameScore = 0;
+    public int GameScore => _gameScore;
+
+    private TargetPool _targetPool = null;
 
     new private void Awake()
     {
@@ -22,6 +27,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     void Start()
     {
         _gameTime = _setGameTime;
+        _targetPool = GameObject.Find("TargetPool").GetComponent<TargetPool>();
     }
 
     // Update is called once per frame
@@ -35,7 +41,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// </summary>
     private void InitGame()
     {
-        _canon = Instantiate(_canon, Vector3.up, Quaternion.identity);
+        _cannon = Instantiate(_cannon, Vector3.up / 2, Quaternion.identity);
         BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
         bulletPool.InitPoolBullet();
     }
@@ -46,5 +52,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void CountDownGameTime()
     {
         _gameTime -= Time.deltaTime;
+    }
+
+    /// <summary>
+    /// スコア上昇
+    /// </summary>
+    /// <param name="score">上昇するスコアの値</param>
+    public void CountUpScore(int score)
+    {
+        _gameScore += score;
+    }
+    
+    private void SpawnTarget()
+    {
+
     }
 }

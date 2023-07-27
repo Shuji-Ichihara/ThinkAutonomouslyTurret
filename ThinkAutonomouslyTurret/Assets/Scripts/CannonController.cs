@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CanonController : SingletonMonoBehaviour<CanonController>
+public class CannonController : SingletonMonoBehaviour<CannonController>
 {
     #region Refarence
     // 弾を発射する座標
     [SerializeField]
     private Transform _bulletSpawnPoint = null;
     public Transform BulletSpawnPoint => _bulletSpawnPoint;
-    //
+    // 砲台のピボット
     [SerializeField]
-    private Transform _CanonPivot = null;
+    private Transform _CannonPivot = null;
     // 砲身のピボット
     [SerializeField]
     private Transform _burralRoot = null;
@@ -48,11 +48,11 @@ public class CanonController : SingletonMonoBehaviour<CanonController>
     {
         if (Input.GetKey(KeyCode.A))
         {
-            _CanonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.down);
+            _CannonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.down);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            _CanonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.up);
+            _CannonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.up);
         }
     }
 

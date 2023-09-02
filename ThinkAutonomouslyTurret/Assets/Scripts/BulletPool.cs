@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPool : MonoBehaviour
+public class BulletPool : SingletonMonoBehaviour<BulletPool>, PoolFeature
 {
     [SerializeField]
     private GameObject _bullet = null;
@@ -12,9 +12,9 @@ public class BulletPool : MonoBehaviour
     private const int _max = 100;
 
     /// <summary>
-    /// オブジェクトプール生成
+    /// 弾のオブジェクトプール生成
     /// </summary>
-    public void InitPoolBullet()
+    public void InitObjectPool()
     {
         PoolingObject poolingObject;
         for (int i = 0; i < _max; i++)
@@ -26,10 +26,11 @@ public class BulletPool : MonoBehaviour
     }
 
     /// <summary>
-    /// プール内のオブジェクトを検索、
+    /// 弾オブジェクトを検索、アクティブ化
     /// </summary>
-    /// <param name="spawnPosition">スポーンする座標</param>
-    public void ActivateObject(Vector3 spawnPosition)
+    /// <param name="spawnPosition">オブジェクトを生成する座標</param>
+    /// <param name="number">ここでは使用しない</param>
+    public void ActivateObject(Vector3 spawnPosition, int number = 0)
     {
         PoolingObject poolingObject;
         for (int i = 0; i < _poolingObjects.Count; i++)
@@ -43,7 +44,6 @@ public class BulletPool : MonoBehaviour
         }
         // 万一、プール内のオブジェクトが不足した場合、新しく生成しプールに加える
         poolingObject = Instantiate(_bullet, transform).GetComponent<PoolingObject>();
-        _bullet.transform.parent = transform;
         poolingObject.InitObject(spawnPosition);
         _poolingObjects.Add(poolingObject);
     }

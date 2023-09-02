@@ -26,12 +26,6 @@ public class Bullet : MonoBehaviour
         _rb.useGravity = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void FixedUpdate()
     {
         MoveBullet();
@@ -43,7 +37,7 @@ public class Bullet : MonoBehaviour
     private void MoveBullet()
     {
         _moveBulletDistance += _bulletSpeed * Time.deltaTime;
-        transform.position += CanonController.Instance.BulletSpawnPoint.up * _moveBulletDistance;
+        transform.position += CannonController.Instance.BulletSpawnPoint.up * _moveBulletDistance;
         if(_moveBulletDistance > 200.0f)
         {
             gameObject.SetActive(false);

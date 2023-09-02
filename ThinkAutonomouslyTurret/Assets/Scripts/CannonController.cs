@@ -24,7 +24,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     [SerializeField]
     private float _burarlRotateSpeed = 5.0f;
     #endregion
-
+    // 弾のオブジェクトプール
     private BulletPool _bulletPool = null;
 
     // Start is called before the first frame update
@@ -63,7 +63,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     {
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            // unity の回転軸は
+            // unity の回転軸は左手座標系のため、時計回りになる
             float x = (_burralRoot.localRotation *= Quaternion.AngleAxis(_burarlRotateSpeed * Time.deltaTime, Vector3.left)).x;
             _burralRoot.localEulerAngles -= new Vector3(x, 0.0f, 0.0f);
             if(_burralRoot.localEulerAngles.x < 360.0f - 15.0f)
@@ -86,7 +86,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// </summary>
     private void ShotBullet()
     {
-        if (Input.GetKey(KeyCode.Return))
+        if (Input.GetKey(KeyCode.Space))
         {
             _bulletPool.ActivateObject(_bulletSpawnPoint.position);
         }

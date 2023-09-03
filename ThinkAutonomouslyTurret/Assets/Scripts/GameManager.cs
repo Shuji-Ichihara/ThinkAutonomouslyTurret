@@ -15,8 +15,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     // スコア
     private int _gameScore = 0;
     public int GameScore => _gameScore;
-
+    [SerializeField]
     private TargetPool _targetPool = null;
+
+    private Transform _targetSpawnZone = null;
 
     new private void Awake()
     {
@@ -27,13 +29,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     void Start()
     {
         _gameTime = _setGameTime;
-        _targetPool = GameObject.Find("TargetPool").GetComponent<TargetPool>();
+        //_targetPool = GameObject.Find("TargetPool").GetComponent<TargetPool>();
+        _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
         CountDownGameTime();
+        SpawnTarget();
     }
 
     /// <summary>
@@ -43,7 +47,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         _cannon = Instantiate(_cannon, Vector3.up / 2, Quaternion.identity);
         BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
-        bulletPool.InitPoolBullet();
+        bulletPool.InitObjectPool();
+        _targetPool.InitObjectPool();
     }
 
     /// <summary>
@@ -62,9 +67,27 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         _gameScore += score;
     }
-    
+
+    /// <summary>
+    /// 的をシーン上に配置
+    /// </summary>
     private void SpawnTarget()
     {
+        int randomNumber = Random.Range(0, _targetPool.TargetType.Length);
+        Vector3 spawnPosition = CalculateSpawnPosition(randomNumber);
+        _targetPool.ActivateObject(spawnPosition, randomNumber);
+    }
 
+    /// <summary>
+    /// スポーンする座標を計算
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 CalculateSpawnPosition(int number)
+    {
+        Vector3 targetScale = _targetPool.TargetType[number].transform.position;
+        float x = Random.Range(-_targetSpawnZone.localScale.x / 2, _targetSpawnZone.localScale.x / 2);
+        float y = Random.Range(targetScale.z / 2, (_targetSpawnZone.localScale.y / 2) - (targetScale.z / 2));
+        float z = Random.Range(-_targetSpawnZone.localScale.z / 2, _targetSpawnZone.localScale.z / 2);
+        return new Vector3(x, y, z);
     }
 }

@@ -8,10 +8,11 @@ public class PoolingObject : MonoBehaviour
     /// このコンポーネントがアタッチされているオブジェクトのプール作成に使用
     /// </summary>
     /// <param name="spawnPosition">このオブジェクトの座標</param>
-    public void InitObject(Vector3 spawnPosition)
+    public GameObject InitObject(Vector3 spawnPosition)
     {
         _transform = GetComponent<Transform>();
         _transform.position = spawnPosition;
         gameObject.SetActive(true);
+        return gameObject;
     }
 }

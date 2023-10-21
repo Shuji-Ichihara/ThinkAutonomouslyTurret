@@ -1,24 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
+    #region Refarences
     // 大砲の Prefab
+    public GameObject Cannon => _cannon;
     [SerializeField]
     private GameObject _cannon = null;
+    // Target の親オブジェクト
+    [SerializeField]
+    private TargetPool _targetPool = null;
+    private Transform _targetSpawnZone = null;
+    #endregion
+    #region Time
     // 制限時間
     [SerializeField]
     private float _setGameTime = 60.0f;
     private static float _gameTime = 0.0f;
     public static float GameTime => _gameTime;
+    // Target のスポーンする間隔
+    [SerializeField]
+    private float _spawningIntervalTime = 5.0f;
+    private float _countInterval = 0.0f;
+    #endregion
+    #region Score
     // スコア
     private int _gameScore = 0;
     public int GameScore => _gameScore;
-    [SerializeField]
-    private TargetPool _targetPool = null;
-
-    private Transform _targetSpawnZone = null;
+    #endregion
+    // 的が一度にスポーンする個数
+    [SerializeField, Range(0, 10)]
+    private int _spawningNumberOfTargets = 5;
 
     new private void Awake()
     {
@@ -29,15 +44,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     void Start()
     {
         _gameTime = _setGameTime;
+        _countInterval = 0.0f;
         //_targetPool = GameObject.Find("TargetPool").GetComponent<TargetPool>();
         _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
+        for (int i = 0; i < _spawningNumberOfTargets; i++)
+        {
+            SpawnTarget();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        CountDownGameTime();
-        SpawnTarget();
+        CountGameTime();
     }
 
     /// <summary>
@@ -52,11 +71,20 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     }
 
     /// <summary>
-    /// 制限時間のカウントダウン
+    /// 制限時間のカウント
     /// </summary>
-    private void CountDownGameTime()
+    private void CountGameTime()
     {
         _gameTime -= Time.deltaTime;
+        _countInterval += Time.deltaTime;
+        if (_countInterval > _spawningIntervalTime)
+        {
+            for (int i = 0; i < _spawningNumberOfTargets; i++)
+            {
+                SpawnTarget();
+            }
+            _countInterval = 0.0f;
+        }
     }
 
     /// <summary>
@@ -81,13 +109,21 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>
     /// スポーンする座標を計算
     /// </summary>
-    /// <returns></returns>
+    /// <param name="number">配置する的の種類</param>
+    /// <returns>的を配置する座標</returns>
     public Vector3 CalculateSpawnPosition(int number)
     {
-        Vector3 targetScale = _targetPool.TargetType[number].transform.position;
+        var target = _targetPool.TargetType[number].GetComponentInChildren<TargetController>();
+        Vector3 targetScale = target.gameObject.transform.localScale;
+        // 指定範囲内にランダムに配置
         float x = Random.Range(-_targetSpawnZone.localScale.x / 2, _targetSpawnZone.localScale.x / 2);
         float y = Random.Range(targetScale.z / 2, (_targetSpawnZone.localScale.y / 2) - (targetScale.z / 2));
         float z = Random.Range(-_targetSpawnZone.localScale.z / 2, _targetSpawnZone.localScale.z / 2);
+        // 的が地面に埋め込まれないように配置する高さを調整
+        if (y < targetScale.x)
+        {
+            y = targetScale.x;
+        }
         return new Vector3(x, y, z);
     }
 }

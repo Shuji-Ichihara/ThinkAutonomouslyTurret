@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class TargetPool : SingletonMonoBehaviour<TargetPool>, PoolFeature
 {
     // 的の種類
+    public GameObject[] TargetType => _targetType;
     [SerializeField]
     private GameObject[] _targetType = { };
-    public GameObject[] TargetType => _targetType;
     // 的のオブジェクトプールの親
     [SerializeField]
     private Transform[] _poolParentTransforms = { };
@@ -23,11 +22,10 @@ public class TargetPool : SingletonMonoBehaviour<TargetPool>, PoolFeature
     public void InitObjectPool()
     {
         PoolingObject poolingObject;
-        List<PoolingObject> poolingObjects = new List<PoolingObject>();
         _poolingTargetType = new List<PoolingObject>[_targetType.Length];
         for (int i = 0; i < _targetType.Length; i++)
         {
-            _poolingTargetType[i] = poolingObjects;
+            _poolingTargetType[i] = new List<PoolingObject>();
             for (int j = 0; j < _max; j++)
             {
                 poolingObject = Instantiate(_targetType[i], _poolParentTransforms[i]).GetComponentInChildren<PoolingObject>();
@@ -44,7 +42,8 @@ public class TargetPool : SingletonMonoBehaviour<TargetPool>, PoolFeature
     /// <param name="number">生成された乱数</param>
     public void ActivateObject(Vector3 spawnPosition, int number = 0)
     {
-        List<PoolingObject> poolingObjects = GetPoolingTargetType(number);
+        bool isSpawn = false;
+        List<PoolingObject> poolingObjects = _poolingTargetType[number];
         PoolingObject poolingObject;
         GameObject obj;
         for (int i = 0; i < poolingObjects.Count; i++)
@@ -53,24 +52,18 @@ public class TargetPool : SingletonMonoBehaviour<TargetPool>, PoolFeature
             if (false == poolingObject.gameObject.activeSelf)
             {
                 obj = poolingObject.InitObject(spawnPosition);
-                obj.transform.LookAt(CannonController.Instance.gameObject.transform, Vector3.forward);
-                return;
+                obj.transform.LookAt(CannonController.Instance.gameObject.transform, Vector3.up);
+                isSpawn = true;
+                break;
             }
         }
-        // 万一、プール内のオブジェクトが不足した場合、新しく生成しプールに加える
-        poolingObject = Instantiate(_targetType[number], _poolParentTransforms[number]).GetComponentInChildren<PoolingObject>();
-        obj = poolingObject.InitObject(spawnPosition);
-        _poolingTargetType[number].Add(poolingObject);
-        obj.transform.LookAt(CannonController.Instance.gameObject.transform, Vector3.forward);
-    }
-
-    /// <summary>
-    /// 的の種類を確定させ、それのオブジェクトプールを返す
-    /// </summary>
-    /// <param name="index">配列のインデックス</param>
-    /// <returns>的のオブジェクトプール</returns>
-    private List<PoolingObject> GetPoolingTargetType(int index)
-    {
-        return _poolingTargetType[index];
+        // プール内のオブジェクトが不足した場合、新しく生成しプールに加える
+        if (false == isSpawn)
+        {
+            poolingObject = Instantiate(_targetType[number], _poolParentTransforms[number]).GetComponentInChildren<PoolingObject>();
+            obj = poolingObject.InitObject(spawnPosition);
+            _poolingTargetType[number].Add(poolingObject);
+            obj.transform.LookAt(CannonController.Instance.gameObject.transform, Vector3.up);
+        }
     }
 }

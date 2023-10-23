@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TargetController : MonoBehaviour
+public class Target : MonoBehaviour
 {
     // 的のスコア
     [SerializeField]
     private int _keepScore = 10;
     // 的の耐久値
-    public int EndurancePoint = 0;
+    [SerializeField]
+    private int _endurancePoint = 0;
 
     private void OnCollisionEnter(Collision other)
     {
@@ -17,13 +16,13 @@ public class TargetController : MonoBehaviour
     }
 
     /// <summary>
-    /// 弾丸が当たったらスコア上昇
+    /// 的を破壊したらスコア上昇
     /// </summary>
     /// <param name="bullet">Bullet スクリプト</param>
     private void HitBullet(Bullet bullet)
     {
-        EndurancePoint -= bullet.Damage;
-        if(EndurancePoint < 0)
+        _endurancePoint -= bullet.Damage;
+        if(_endurancePoint < 0)
         {
             GameManager.Instance.CountUpScore(_keepScore);
             gameObject.SetActive(false);

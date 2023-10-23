@@ -1,5 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 using UnityEngine;
 
 public class CannonController : SingletonMonoBehaviour<CannonController>
@@ -31,12 +32,12 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     void Start()
     {
         _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
+        CallShotBullet();
     }
 
     // Update is called once per frame
     void Update()
     {
-        ShotBullet();
         RotateCanon();
         RotateBurralAngle();
     }
@@ -66,7 +67,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
             // unity の回転軸は左手座標系のため、時計回りになる
             float x = (_burralRoot.localRotation *= Quaternion.AngleAxis(_burarlRotateSpeed * Time.deltaTime, Vector3.left)).x;
             _burralRoot.localEulerAngles -= new Vector3(x, 0.0f, 0.0f);
-            if(_burralRoot.localEulerAngles.x < 360.0f - 15.0f)
+            if (_burralRoot.localEulerAngles.x < 360.0f - 15.0f)
             {
                 _burralRoot.localEulerAngles = new Vector3(360.0f - 15.0f, 0.0f, 0.0f);
             }
@@ -84,11 +85,36 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// <summary>
     /// 弾を発射する
     /// </summary>
-    private void ShotBullet()
+    /// <param name="cts">キャンセル処理用のトークン</param>
+    private async UniTask ShotBullet(CancellationTokenSource cts = default)
     {
-        if (Input.GetKey(KeyCode.Space))
+        bool isReleasedkey = false;
+        while (isReleasedkey == false)
         {
-            _bulletPool.ActivateObject(_bulletSpawnPoint.position);
+            try
+            {
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    _bulletPool.ActivateObject(_bulletSpawnPoint.position);
+                }
+                await UniTask.WaitForSeconds(Time.fixedDeltaTime * 5, cancellationToken: cts.Token);
+            }
+            catch (NullReferenceException)
+            {
+                isReleasedkey = true;
+                cts.Cancel();
+                continue;
+            }
         }
+        cts.Cancel();
+    }
+
+    /// <summary>
+    /// ShotBullet を呼び出す
+    /// </summary>
+    private void CallShotBullet()
+    {
+        CancellationTokenSource cts = new CancellationTokenSource();
+        ShotBullet(cts).Forget();
     }
 }

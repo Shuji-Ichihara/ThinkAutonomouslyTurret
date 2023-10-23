@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,8 +19,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     // 制限時間
     [SerializeField]
     private float _setGameTime = 60.0f;
-    private static float _gameTime = 0.0f;
-    public static float GameTime => _gameTime;
+    private float _gameTime = 0.0f;
+    public float GameTime => _gameTime;
     // Target のスポーンする間隔
     [SerializeField]
     private float _spawningIntervalTime = 5.0f;
@@ -41,22 +41,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     }
 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
+        CancellationTokenSource cts = new CancellationTokenSource();
         _gameTime = _setGameTime;
         _countInterval = 0.0f;
-        //_targetPool = GameObject.Find("TargetPool").GetComponent<TargetPool>();
         _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
         for (int i = 0; i < _spawningNumberOfTargets; i++)
         {
             SpawnTarget();
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        CountGameTime();
+        await CountGameTime(cts);
     }
 
     /// <summary>
@@ -73,18 +68,34 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>
     /// 制限時間のカウント
     /// </summary>
-    private void CountGameTime()
+    private async UniTask CountGameTime(CancellationTokenSource cts = default)
     {
-        _gameTime -= Time.deltaTime;
-        _countInterval += Time.deltaTime;
-        if (_countInterval > _spawningIntervalTime)
+        while (_gameTime > 0.0f)
         {
-            for (int i = 0; i < _spawningNumberOfTargets; i++)
+            try
             {
-                SpawnTarget();
+                await UniTask.Yield(cts.Token);
+                _gameTime -= Time.deltaTime;
+                _countInterval += Time.deltaTime;
+                // 的を配置
+                if (_countInterval > _spawningIntervalTime)
+                {
+                    for (int i = 0; i < _spawningNumberOfTargets; i++)
+                    {
+                        SpawnTarget();
+                    }
+                    _countInterval = 0.0f;
+                }
             }
-            _countInterval = 0.0f;
+            catch (MissingReferenceException)
+            {
+                cts.Cancel();
+                continue;
+            }
         }
+        // 半端な値になるため、ループを抜けたら 0 を代入
+        _gameTime = 0.0f;
+        cts.Cancel();
     }
 
     /// <summary>
@@ -113,17 +124,36 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <returns>的を配置する座標</returns>
     public Vector3 CalculateSpawnPosition(int number)
     {
-        var target = _targetPool.TargetType[number].GetComponentInChildren<TargetController>();
+        bool isSapwnX = false, isSpawnZ = false;
+        float spawnX = 0.0f, spawnY = 0.0f, spawnZ = 0.0f;
+        var target = _targetPool.TargetType[number].GetComponentInChildren<Target>();
         Vector3 targetScale = target.gameObject.transform.localScale;
         // 指定範囲内にランダムに配置
-        float x = Random.Range(-_targetSpawnZone.localScale.x / 2, _targetSpawnZone.localScale.x / 2);
-        float y = Random.Range(targetScale.z / 2, (_targetSpawnZone.localScale.y / 2) - (targetScale.z / 2));
-        float z = Random.Range(-_targetSpawnZone.localScale.z / 2, _targetSpawnZone.localScale.z / 2);
-        // 的が地面に埋め込まれないように配置する高さを調整
-        if (y < targetScale.x)
+        // X 軸と Z 軸は Cannon と重ならないようにする
+        while (isSapwnX == false)
         {
-            y = targetScale.x;
+            float dummyX = Random.Range(-_targetSpawnZone.localScale.x / 2, _targetSpawnZone.localScale.x / 2);
+            if (dummyX > Cannon.transform.position.x + 10.0f || dummyX < Cannon.transform.position.x - 10.0f)
+            {
+                spawnX = dummyX;
+                isSapwnX = true;
+            }
         }
-        return new Vector3(x, y, z);
+        while (isSpawnZ == false)
+        {
+            float dummyZ = Random.Range(-_targetSpawnZone.localScale.z / 2, _targetSpawnZone.localScale.z / 2);
+            if (dummyZ > Cannon.transform.position.z + 10.0f || dummyZ < Cannon.transform.position.z - 10.0f)
+            {
+                spawnZ = dummyZ;
+                isSpawnZ = true;
+            }
+        }
+        spawnY = Random.Range(targetScale.z / 2, (_targetSpawnZone.localScale.y / 2) - (targetScale.z / 2));
+        // 的が地面に埋め込まれないように配置する高さを調整
+        if (spawnY < targetScale.x)
+        {
+            spawnY = targetScale.x;
+        }
+        return new Vector3(spawnX, spawnY, spawnZ);
     }
 }

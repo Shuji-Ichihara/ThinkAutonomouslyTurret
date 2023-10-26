@@ -1,10 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
+    #region Refarences
+    [SerializeField]
+    private Camera _uiCamera = null;
     // ゲームシーンのキャンバス
     [SerializeField]
     private Canvas _gameUICanvas = null;
@@ -14,13 +18,26 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     // 制限時間を表示するテキスト
     [SerializeField]
     private TextMeshProUGUI _timeText = null;
+    // ポップアップするテキスト
+    [SerializeField]
+    private TextMeshProUGUI _popUpText = null;
+    #endregion
 
-    private Target _target = null; 
+    //public Subject<GameObject> PopUpText = new Subject<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
-        _gameUICanvas.worldCamera = Camera.main;
+        // UICamera の null チェック
+        if (_gameUICanvas.worldCamera == null || _uiCamera == null)
+        {
+            _uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
+            _gameUICanvas.worldCamera = _uiCamera;
+        }
+        _uiCamera.GetUniversalAdditionalCameraData().renderType = CameraRenderType.Overlay;
+        // MainCamera に UICamera の情報を合成する
+        var mainCameraData = Camera.main.GetUniversalAdditionalCameraData();
+        mainCameraData.cameraStack.Add(_uiCamera);
         SetUpText();
     }
 
@@ -39,16 +56,44 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         _timeText.fontSize = 120.0f;
         _scoreText.fontSize = 80.0f;
         _timeText.alignment = TextAlignmentOptions.Center;
-        _scoreText.alignment = TextAlignmentOptions.Right;
+        _scoreText.alignment = TextAlignmentOptions.Top;
     }
 
     /// <summary>
     /// ダメージ、スコアアップテキストを表示する
     /// </summary>
-    /// <param name="obj"></param>
-    public void PopUpText(GameObject obj)
+    /// <param name="TargetObject">テキストを表示する座標にあるオブジェクト</param>
+    public async void PopUpText(GameObject TargetObject, int previewNumber = 0)
     {
-
+        Target target = TargetObject.GetComponent<Target>();
+        _popUpText.text = previewNumber.ToString();
+        RectTransform canvasTransform = _gameUICanvas.GetComponent<RectTransform>();
+        GameObject textComponent =Instantiate(_popUpText.gameObject, _gameUICanvas.transform);
+        RectTransform textComponentTransform = textComponent.GetComponent<RectTransform>();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasTransform
+            , textComponent.transform.position
+            , null
+            , out var vector2);
+        textComponentTransform.position += (Vector3.up + Vector3.right) ;
+        await AnimationText(textComponentTransform, this.GetCancellationTokenOnDestroy());
     }
 
+    /// <summary>
+    /// ポップアップするテキストのアニメーション
+    /// </summary>
+    /// <param name="rectTransform">テキストコンポーネントの UI 座標</param>
+    /// <param name="token">キャンセル処理用のトークン</param>
+    /// <returns></returns>
+    private async UniTask AnimationText(RectTransform rectTransform, CancellationToken token = default)
+    {
+        float animationTime = 0.0f, endAnimationTime = 2.0f;
+        while (animationTime < endAnimationTime )
+        {
+            rectTransform.position += Vector3.up / 2 * Time.deltaTime;
+            animationTime += Time.deltaTime;
+            await UniTask.Yield(token);
+        }
+        Destroy(rectTransform.gameObject);
+    }
 }

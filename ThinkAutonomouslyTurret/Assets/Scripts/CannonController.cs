@@ -62,20 +62,21 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// </summary>
     private void RotateBurralAngle()
     {
+        float burralRotationLimit = 20.0f;
         if (Input.GetKey(KeyCode.UpArrow))
         {
             // unity の回転軸は左手座標系のため、時計回りになる
             float x = (_burralRoot.localRotation *= Quaternion.AngleAxis(_burarlRotateSpeed * Time.deltaTime, Vector3.left)).x;
             _burralRoot.localEulerAngles -= new Vector3(x, 0.0f, 0.0f);
-            if (_burralRoot.localEulerAngles.x < 360.0f - 15.0f)
+            if (_burralRoot.localEulerAngles.x < 360.0f - burralRotationLimit)
             {
-                _burralRoot.localEulerAngles = new Vector3(360.0f - 15.0f, 0.0f, 0.0f);
+                _burralRoot.localEulerAngles = new Vector3(360.0f - burralRotationLimit, 0.0f, 0.0f);
             }
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
             _burralRoot.rotation *= Quaternion.AngleAxis(_burarlRotateSpeed * Time.deltaTime, Vector3.right);
-            if (_burralRoot.localEulerAngles.x > 0.0f && _burralRoot.localEulerAngles.x < 360.0f - 15.0f)
+            if (_burralRoot.localEulerAngles.x > 0.0f && _burralRoot.localEulerAngles.x < 360.0f - burralRotationLimit)
             {
                 _burralRoot.localEulerAngles = Vector3.zero;
             }

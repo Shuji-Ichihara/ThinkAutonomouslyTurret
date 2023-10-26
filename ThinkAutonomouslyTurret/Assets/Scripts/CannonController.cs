@@ -16,6 +16,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     // 砲身のピボット
     [SerializeField]
     private Transform _burralRoot = null;
+    public Transform BurralRoot => _burralRoot;
     #endregion
     #region MoveSpeed
     // 砲台が回転するスピード

@@ -156,4 +156,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _keepScore: 10
-  EndurancePoint: 50
+  _endurancePoint: 50

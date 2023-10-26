@@ -122,10 +122,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// </summary>
     /// <param name="number">配置する的の種類</param>
     /// <returns>的を配置する座標</returns>
-    public Vector3 CalculateSpawnPosition(int number)
+    private Vector3 CalculateSpawnPosition(int number)
     {
         bool isSapwnX = false, isSpawnZ = false;
         float spawnX = 0.0f, spawnY = 0.0f, spawnZ = 0.0f;
+        float cannonDistance = 20.0f;
         var target = _targetPool.TargetType[number].GetComponentInChildren<Target>();
         Vector3 targetScale = target.gameObject.transform.localScale;
         // 指定範囲内にランダムに配置
@@ -133,7 +134,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         while (isSapwnX == false)
         {
             float dummyX = Random.Range(-_targetSpawnZone.localScale.x / 2, _targetSpawnZone.localScale.x / 2);
-            if (dummyX > Cannon.transform.position.x + 10.0f || dummyX < Cannon.transform.position.x - 10.0f)
+            if (dummyX > Cannon.transform.position.x + cannonDistance || dummyX < Cannon.transform.position.x - cannonDistance)
             {
                 spawnX = dummyX;
                 isSapwnX = true;
@@ -142,7 +143,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         while (isSpawnZ == false)
         {
             float dummyZ = Random.Range(-_targetSpawnZone.localScale.z / 2, _targetSpawnZone.localScale.z / 2);
-            if (dummyZ > Cannon.transform.position.z + 10.0f || dummyZ < Cannon.transform.position.z - 10.0f)
+            if (dummyZ > Cannon.transform.position.z + cannonDistance || dummyZ < Cannon.transform.position.z - cannonDistance)
             {
                 spawnZ = dummyZ;
                 isSpawnZ = true;

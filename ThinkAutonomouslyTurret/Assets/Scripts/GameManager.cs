@@ -151,9 +151,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
         spawnY = Random.Range(targetScale.z / 2, (_targetSpawnZone.localScale.y / 2) - (targetScale.z / 2));
         // 的が地面に埋め込まれないように配置する高さを調整
-        if (spawnY < targetScale.x)
+        // 的の大きさによっては弾が当たらない座標にスポーンするため、砲身が水平の時の直線上より上にあるように再配置する
+        if (spawnY < CannonController.Instance.BurralRoot.position.y)
         {
-            spawnY = targetScale.x;
+            spawnY = CannonController.Instance.BurralRoot.position.y + targetScale.y / 2;
         }
         return new Vector3(spawnX, spawnY, spawnZ);
     }

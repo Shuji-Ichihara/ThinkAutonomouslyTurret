@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetPool : SingletonMonoBehaviour<TargetPool>, PoolFeature
+public class TargetPool : SingletonMonoBehaviour<TargetPool>, IObjectPool
 {
     // 的の種類
     public GameObject[] TargetType => _targetType;

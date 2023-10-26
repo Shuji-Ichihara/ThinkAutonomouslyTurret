@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPool : SingletonMonoBehaviour<BulletPool>, PoolFeature
+public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool
 {
     [SerializeField]
     private GameObject _bullet = null;
 
     private List<PoolingObject> _poolingObjects = new List<PoolingObject>();
     // 備蓄しておく Prefab の個数
-    private const int _max = 100;
+    private const int _max = 50;
 
     /// <summary>
     /// 弾のオブジェクトプール生成

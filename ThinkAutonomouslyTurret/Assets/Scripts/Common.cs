@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// オブジェクトプール機能
+/// オブジェクトプールが実装する機能
 /// </summary>
-public interface PoolFeature
+public interface IObjectPool
 {
     /// <summary>
     /// オブジェクトプール生成

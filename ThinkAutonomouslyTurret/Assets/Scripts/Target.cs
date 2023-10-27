@@ -26,6 +26,9 @@ public class Target : MonoBehaviour
         {
             GameManager.Instance.CountUpScore(_keepScore);
             gameObject.SetActive(false);
+            UIManager.Instance.PopUpScoreText(gameObject, _keepScore);
+            return;
         }
+        UIManager.Instance.PopUpScoreText(gameObject, bullet.Damage);
     }
 }

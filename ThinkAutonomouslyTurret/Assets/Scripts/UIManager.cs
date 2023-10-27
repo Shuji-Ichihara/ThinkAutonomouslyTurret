@@ -57,24 +57,27 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         _scoreText.fontSize = 80.0f;
         _timeText.alignment = TextAlignmentOptions.Center;
         _scoreText.alignment = TextAlignmentOptions.Top;
+        _popUpText.color = Color.black;
     }
 
     /// <summary>
     /// ダメージ、スコアアップテキストを表示する
     /// </summary>
     /// <param name="TargetObject">テキストを表示する座標にあるオブジェクト</param>
-    public async void PopUpText(GameObject TargetObject, int previewNumber = 0)
+    public async void PopUpScoreText(GameObject TargetObject, int previewNumber = 0)
     {
         Target target = TargetObject.GetComponent<Target>();
         _popUpText.text = previewNumber.ToString();
         RectTransform canvasTransform = _gameUICanvas.GetComponent<RectTransform>();
         GameObject textComponent =Instantiate(_popUpText.gameObject, _gameUICanvas.transform);
         RectTransform textComponentTransform = textComponent.GetComponent<RectTransform>();
+        // スクリーン座標を UI 座標に変換
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvasTransform
             , textComponent.transform.position
             , null
             , out var vector2);
+        // 的の右上にテキストを配置
         textComponentTransform.position += (Vector3.up + Vector3.right) ;
         await AnimationText(textComponentTransform, this.GetCancellationTokenOnDestroy());
     }
@@ -87,7 +90,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     /// <returns></returns>
     private async UniTask AnimationText(RectTransform rectTransform, CancellationToken token = default)
     {
-        float animationTime = 0.0f, endAnimationTime = 2.0f;
+        float animationTime = 0.0f, endAnimationTime = 1.0f;
         while (animationTime < endAnimationTime )
         {
             rectTransform.position += Vector3.up / 2 * Time.deltaTime;

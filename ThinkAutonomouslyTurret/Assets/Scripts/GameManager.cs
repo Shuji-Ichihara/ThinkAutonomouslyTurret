@@ -95,7 +95,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
         // 半端な値になるため、ループを抜けたら 0 を代入
         _gameTime = 0.0f;
-        cts.Cancel();
     }
 
     /// <summary>

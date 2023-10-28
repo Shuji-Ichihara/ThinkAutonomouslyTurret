@@ -7,7 +7,7 @@ public class TargetPool : SingletonMonoBehaviour<TargetPool>, IObjectPool
     public GameObject[] TargetType => _targetType;
     [SerializeField]
     private GameObject[] _targetType = { };
-    // 的のオブジェクトプールの親
+    // 的のオブジェクトプールの親オブジェクト
     [SerializeField]
     private Transform[] _poolParentTransforms = { };
     // List<PoolObject> が的の種類分必要 
@@ -51,6 +51,7 @@ public class TargetPool : SingletonMonoBehaviour<TargetPool>, IObjectPool
             if (false == poolingObject.gameObject.activeSelf)
             {
                 obj = poolingObject.InitObject(spawnPosition);
+                // 的を大砲がある方向へ向ける
                 obj.transform.LookAt(CannonController.Instance.gameObject.transform, Vector3.up);
                 isSpawn = true;
                 break;

@@ -113,7 +113,7 @@ MonoBehaviour:
   _bulletSpawnPoint: {fileID: 3150076141677884635}
   _CannonPivot: {fileID: 3150076141711748212}
   _burralRoot: {fileID: 3150076142920835325}
-  _canonRotateSpeed: 60
+  _canonRotateSpeed: 90
   _burarlRotateSpeed: 20
 --- !u!1 &3150076141790638225
 GameObject:

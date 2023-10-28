@@ -18,9 +18,12 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     // 制限時間を表示するテキスト
     [SerializeField]
     private TextMeshProUGUI _timeText = null;
-    // ポップアップするテキスト
+    // ポップアップするテキスト(的へのダメージ)
     [SerializeField]
-    private TextMeshProUGUI _popUpText = null;
+    private TextMeshProUGUI _popUpDamageText = null;
+    // ポップアップするテキスト(スコア加算)
+    [SerializeField]
+    private TextMeshProUGUI _popUpScoreText = null;
     #endregion
 
     //public Subject<GameObject> PopUpText = new Subject<GameObject>();
@@ -57,19 +60,20 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         _scoreText.fontSize = 80.0f;
         _timeText.alignment = TextAlignmentOptions.Center;
         _scoreText.alignment = TextAlignmentOptions.Top;
-        _popUpText.color = Color.black;
+        _popUpDamageText.color = Color.black;
+        _popUpScoreText.color = Color.black;
+        _popUpScoreText.rectTransform.pivot = Vector2.one;
     }
 
     /// <summary>
-    /// ダメージ、スコアアップテキストを表示する
+    /// ダメージテキストを表示する
     /// </summary>
-    /// <param name="TargetObject">テキストを表示する座標にあるオブジェクト</param>
-    public async void PopUpScoreText(GameObject TargetObject, int previewNumber = 0)
+    /// <param name="Damage">的へのダメージ</param>
+    public async void PopUpDamageText(int Damage = 0)
     {
-        Target target = TargetObject.GetComponent<Target>();
-        _popUpText.text = previewNumber.ToString();
+        _popUpDamageText.text = "-" + Damage.ToString();
         RectTransform canvasTransform = _gameUICanvas.GetComponent<RectTransform>();
-        GameObject textComponent =Instantiate(_popUpText.gameObject, _gameUICanvas.transform);
+        GameObject textComponent = Instantiate(_popUpDamageText.gameObject, _gameUICanvas.transform);
         RectTransform textComponentTransform = textComponent.GetComponent<RectTransform>();
         // スクリーン座標を UI 座標に変換
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -77,9 +81,23 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
             , textComponent.transform.position
             , null
             , out var vector2);
-        // 的の右上にテキストを配置
-        textComponentTransform.position += (Vector3.up + Vector3.right) ;
-        await AnimationText(textComponentTransform, this.GetCancellationTokenOnDestroy());
+        // ゲームの仕様上、的は画面の中央に存在する為、やや右上にテキストを配置
+        textComponentTransform.position += (Vector3.up + Vector3.right);
+        await TextAnimation(textComponentTransform, token: this.GetCancellationTokenOnDestroy());
+    }
+
+    /// <summary>
+    /// スコアアップテキストを表示する
+    /// </summary>
+    /// <param name="score">加算されるスコア</param>
+    public async void PopUpScoreText(int score = 0)
+    {
+        _popUpScoreText.text = "+" + score.ToString();
+        GameObject textComponent = Instantiate(_popUpScoreText.gameObject, _gameUICanvas.transform);
+        RectTransform textComponentTransform = textComponent.GetComponent<RectTransform>();
+        // _popUpSocreText を _scoreText の下に配置
+        textComponentTransform.anchoredPosition = Vector2.right * textComponentTransform.anchoredPosition + Vector2.down * _scoreText.rectTransform.rect.height;
+        await TextAnimation(textComponentTransform, 2.0f, this.GetCancellationTokenOnDestroy());
     }
 
     /// <summary>
@@ -88,13 +106,25 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     /// <param name="rectTransform">テキストコンポーネントの UI 座標</param>
     /// <param name="token">キャンセル処理用のトークン</param>
     /// <returns></returns>
-    private async UniTask AnimationText(RectTransform rectTransform, CancellationToken token = default)
+    private async UniTask TextAnimation(RectTransform rectTransform, float animationLength = 1.0f, CancellationToken token = default)
     {
-        float animationTime = 0.0f, endAnimationTime = 1.0f;
-        while (animationTime < endAnimationTime )
+        float animationTime = 0.0f;
+        // テキストの色情報を取得
+        var text = rectTransform.gameObject.GetComponent<TextMeshProUGUI>();
+        Color textColor = text.color;
+        float alpha = 0.0f;
+        // 疑似アニメーション再生
+        while (animationTime < animationLength)
         {
             rectTransform.position += Vector3.up / 2 * Time.deltaTime;
             animationTime += Time.deltaTime;
+            if (animationTime > animationLength / 2)
+            {
+                // 文字をフェードアウト
+                alpha = text.color.a;
+                alpha -= Time.deltaTime;
+                text.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
+            }
             await UniTask.Yield(token);
         }
         Destroy(rectTransform.gameObject);

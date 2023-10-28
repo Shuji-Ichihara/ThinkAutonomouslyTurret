@@ -59,7 +59,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     }
 
     /// <summary>
-    /// 砲身の角度を調節
+    /// 砲身の角度を調整
     /// </summary>
     private void RotateBurralAngle()
     {
@@ -108,7 +108,6 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
                 continue;
             }
         }
-        cts.Cancel();
     }
 
     /// <summary>

@@ -9,6 +9,11 @@ public class Target : MonoBehaviour
     [SerializeField]
     private int _endurancePoint = 0;
 
+    private void Start()
+    {
+        gameObject.tag = "Target";
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         var bullet = other.gameObject.GetComponent<Bullet>();
@@ -22,13 +27,13 @@ public class Target : MonoBehaviour
     private void HitBullet(Bullet bullet)
     {
         _endurancePoint -= bullet.Damage;
-        if(_endurancePoint < 0)
+        if (_endurancePoint < 0)
         {
             GameManager.Instance.CountUpScore(_keepScore);
+            UIManager.Instance.PopUpScoreText(_keepScore);
             gameObject.SetActive(false);
-            UIManager.Instance.PopUpScoreText(gameObject, _keepScore);
             return;
         }
-        UIManager.Instance.PopUpScoreText(gameObject, bullet.Damage);
+        UIManager.Instance.PopUpDamageText(bullet.Damage);
     }
 }

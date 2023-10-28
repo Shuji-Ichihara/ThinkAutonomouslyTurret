@@ -352,7 +352,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 200}
+  m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &371797573
 MonoBehaviour:
@@ -1032,7 +1032,9 @@ MonoBehaviour:
   _gameUICanvas: {fileID: 1831046441}
   _scoreText: {fileID: 371797573}
   _timeText: {fileID: 188853608}
-  _popUpText: {fileID: 1744917269423526270, guid: 9cfe8e1f74855124594a1100dd83d096,
+  _popUpDamageText: {fileID: 1744917269423526270, guid: d4dc5ccf1a1b9ad49b871cf1eb479477,
+    type: 3}
+  _popUpScoreText: {fileID: 1744917269423526270, guid: 9cfe8e1f74855124594a1100dd83d096,
     type: 3}
 --- !u!1 &1515467137
 GameObject:
@@ -1058,7 +1060,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515467137}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 40, z: 0}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 100, y: 40, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []

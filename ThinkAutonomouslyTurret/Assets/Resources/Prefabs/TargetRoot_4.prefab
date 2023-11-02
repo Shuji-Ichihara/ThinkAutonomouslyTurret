@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8284642929419341762}
   - component: {fileID: -8328200136823005834}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TargetRoot_4
   m_TagString: Target
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 9007002402900351819}
   - component: {fileID: 9007002402900351812}
   - component: {fileID: 2166134742880000396}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Target
   m_TagString: Target
   m_Icon: {fileID: 0}

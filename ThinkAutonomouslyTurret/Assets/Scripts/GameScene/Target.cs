@@ -29,11 +29,11 @@ public class Target : MonoBehaviour
         _endurancePoint -= bullet.Damage;
         if (_endurancePoint < 0)
         {
-            GameManager.Instance.CountUpScore(_keepScore);
-            UIManager.Instance.PopUpScoreText(_keepScore);
+            GameSceneManager.Instance.CountUpScore(_keepScore);
+            GameUIManager.Instance.PopUpScoreText(_keepScore);
             gameObject.SetActive(false);
             return;
         }
-        UIManager.Instance.PopUpDamageText(bullet.Damage);
+        GameUIManager.Instance.PopUpDamageText(bullet.Damage);
     }
 }

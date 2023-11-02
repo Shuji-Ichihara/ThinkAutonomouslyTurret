@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class UIManager : SingletonMonoBehaviour<UIManager>
+public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
 {
     #region Refarences
     [SerializeField]
@@ -47,8 +47,8 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     // Update is called once per frame
     void Update()
     {
-        _timeText.text = string.Format("{0:#}", GameManager.Instance.GameTime);
-        _scoreText.text = "Score : " + GameManager.Instance.GameScore.ToString();
+        _timeText.text = string.Format("{0:#}", GameSceneManager.Instance.GameTime);
+        _scoreText.text = "Score : " + GameSceneManager.Instance.GameScore.ToString();
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     /// <returns></returns>
     private async UniTask TextAnimation(RectTransform rectTransform, float animationLength = 1.0f, CancellationToken token = default)
     {
-        float animationTime = 0.0f;
+        float animationTime = 0.0f, half = 2.0f;
         // テキストの色情報を取得
         var text = rectTransform.gameObject.GetComponent<TextMeshProUGUI>();
         Color textColor = text.color;
@@ -116,9 +116,9 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         // 疑似アニメーション再生
         while (animationTime < animationLength)
         {
-            rectTransform.position += Vector3.up / 2 * Time.deltaTime;
+            rectTransform.position += Vector3.up / half * Time.deltaTime;
             animationTime += Time.deltaTime;
-            if (animationTime > animationLength / 2)
+            if (animationTime > animationLength / half)
             {
                 // 文字をフェードアウト
                 alpha = text.color.a;

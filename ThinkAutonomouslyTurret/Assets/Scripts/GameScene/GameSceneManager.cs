@@ -3,7 +3,7 @@ using System.Threading;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class GameManager : SingletonMonoBehaviour<GameManager>
+public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
 {
     #region Refarences
     // 大砲の Prefab
@@ -41,9 +41,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     }
 
     // Start is called before the first frame update
-    async void Start()
+    void Start()
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
         _gameTime = _setGameTime;
         _countInterval = 0.0f;
         _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
@@ -51,7 +50,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             SpawnTarget();
         }
-        await CountGameTime(cts);
+        CallCountGameTime();
     }
 
     /// <summary>
@@ -63,6 +62,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
         bulletPool.InitObjectPool();
         _targetPool.InitObjectPool();
+    }
+
+    private void CallCountGameTime()
+    {
+        CancellationTokenSource cts = new CancellationTokenSource();
+        CountGameTime(cts).Forget();
     }
 
     /// <summary>
@@ -125,6 +130,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         bool isSapwnX = false, isSpawnZ = false;
         float spawnX = 0.0f, spawnY = 0.0f, spawnZ = 0.0f;
+        float half = 2.0f;
         float cannonDistance = 20.0f;
         var target = _targetPool.TargetType[number].GetComponentInChildren<Target>();
         Vector3 targetScale = target.gameObject.transform.localScale;
@@ -132,7 +138,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // X 軸と Z 軸は Cannon と重ならないようにする
         while (isSapwnX == false)
         {
-            float dummyX = Random.Range(-_targetSpawnZone.localScale.x / 2, _targetSpawnZone.localScale.x / 2);
+            float dummyX = Random.Range(-_targetSpawnZone.localScale.x / half, _targetSpawnZone.localScale.x / half);
             if (dummyX > Cannon.transform.position.x + cannonDistance || dummyX < Cannon.transform.position.x - cannonDistance)
             {
                 spawnX = dummyX;
@@ -141,19 +147,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
         while (isSpawnZ == false)
         {
-            float dummyZ = Random.Range(-_targetSpawnZone.localScale.z / 2, _targetSpawnZone.localScale.z / 2);
+            float dummyZ = Random.Range(-_targetSpawnZone.localScale.z / half, _targetSpawnZone.localScale.z / half);
             if (dummyZ > Cannon.transform.position.z + cannonDistance || dummyZ < Cannon.transform.position.z - cannonDistance)
             {
                 spawnZ = dummyZ;
                 isSpawnZ = true;
             }
         }
-        spawnY = Random.Range(targetScale.z / 2, (_targetSpawnZone.localScale.y / 2) - (targetScale.z / 2));
+        spawnY = Random.Range(targetScale.z / half, (_targetSpawnZone.localScale.y / half) - (targetScale.z / half));
         // 的が地面に埋め込まれないように配置する高さを調整
         // 的の大きさによっては弾が当たらない座標にスポーンするため、砲身が水平の時の直線上より上にあるように再配置する
         if (spawnY < CannonController.Instance.BurralRoot.position.y)
         {
-            spawnY = CannonController.Instance.BurralRoot.position.y + targetScale.y / 2;
+            spawnY = CannonController.Instance.BurralRoot.position.y + targetScale.y / half;
         }
         return new Vector3(spawnX, spawnY, spawnZ);
     }

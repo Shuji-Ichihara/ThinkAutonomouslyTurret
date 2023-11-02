@@ -36,7 +36,7 @@ public class Bullet : MonoBehaviour
     private void MoveBullet()
     {
         _rb.AddForce(CannonController.Instance.BulletSpawnPoint.up * _bulletMoveForce, ForceMode.Impulse);
-        _moveBulletDistance = Vector3.Distance(transform.position, GameManager.Instance.Cannon.transform.position);
+        _moveBulletDistance = Vector3.Distance(transform.position, GameSceneManager.Instance.Cannon.transform.position);
         // Cannon との距離が離れたら非アクティブ化する
         if (_moveBulletDistance > 200.0f)
         {

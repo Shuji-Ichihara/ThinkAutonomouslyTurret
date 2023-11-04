@@ -90,8 +90,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// <param name="cts">キャンセル処理用のトークン</param>
     private async UniTask ShotBullet(CancellationTokenSource cts = default)
     {
-        bool isReleasedkey = false;
-        while (isReleasedkey == false)
+        while (GameSceneManager.Instance.GameTime > 0.0f)
         {
             try
             {
@@ -101,9 +100,8 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
                 }
                 await UniTask.WaitForSeconds(Time.fixedDeltaTime * 5, cancellationToken: cts.Token);
             }
-            catch (NullReferenceException)
+            catch (Exception)
             {
-                isReleasedkey = true;
                 continue;
             }
         }

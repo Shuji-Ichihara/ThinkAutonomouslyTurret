@@ -26,14 +26,15 @@ public class Target : MonoBehaviour
     /// <param name="bullet">Bullet スクリプト</param>
     private void HitBullet(Bullet bullet)
     {
-        _endurancePoint -= bullet.Damage;
+        int damage = bullet.Damage;
+        _endurancePoint -= damage;
         if (_endurancePoint < 0)
         {
             GameSceneManager.Instance.CountUpScore(_keepScore);
-            GameUIManager.Instance.PopUpScoreText(_keepScore);
+            GameUIManager.Instance.CallPopUpScoreText(_keepScore);
             gameObject.SetActive(false);
             return;
         }
-        GameUIManager.Instance.PopUpDamageText(bullet.Damage);
+        GameUIManager.Instance.CallPopUpDamageText(damage);
     }
 }

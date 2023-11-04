@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Threading;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -93,7 +94,7 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
                     _countInterval = 0.0f;
                 }
             }
-            catch (MissingReferenceException)
+            catch (Exception)
             {
                 continue;
             }

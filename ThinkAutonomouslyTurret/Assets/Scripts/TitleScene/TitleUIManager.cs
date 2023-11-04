@@ -30,12 +30,21 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
     // ゲームスタートの案内テキストのフォントサイズ
     private readonly float _gameStartFontSize = 60.0f;
 
+    // キャンセル処理用のトークン
     CancellationTokenSource _titleAnimationToken = new CancellationTokenSource();
     CancellationTokenSource _gameStartAnimationToken = new CancellationTokenSource();
 
     // Start is called before the first frame update
     private async void Start()
     {
+        // UICamera の null チェック
+        var canvas = GameObject.Find("TitleSceneCanvas").GetComponent<Canvas>();
+        var uiCamera = canvas.worldCamera;
+        if(uiCamera == null)
+        {
+            var camera = GameObject.Find("UICamera").GetComponent<Camera>();
+            canvas.worldCamera = camera;
+        }
         SetUpText();
         await MoveDownTextAnimation(_movedownAnimationTime, _titleAnimationToken);
         TitleSceneManager.Instance.IsActivatedChangeScene();
@@ -48,6 +57,7 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
     /// </summary>
     private void SetUpText()
     {
+        // タイトルテキストの null チェック
         if (_titleTextComponent == null)
         {
             _titleTextComponent = GameObject.Find("GameTitle").GetComponent<TextMeshProUGUI>();
@@ -55,6 +65,7 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
         _titleTextComponent.fontSize = _titleFontSize;
         _titleTextComponent.rectTransform.anchoredPosition = Vector2.up * _titleTextComponent.rectTransform.rect.height;
         _titleTextComponent.text = _titleText;
+        // ゲームスタートテキストの null チェック
         if (_gameStartTextComponent == null)
         {
             _gameStartTextComponent = GameObject.Find("GameStart").GetComponent<TextMeshProUGUI>();
@@ -69,7 +80,7 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
     /// タイトルテキストの降下アニメーション
     /// </summary>
     /// <param name="moveDownAnimationTime"></param>
-    /// <param name="cts"></param>
+    /// <param name="cts">キャンセル処理用のトークン</param>
     /// <returns></returns>
     private async UniTask MoveDownTextAnimation(float moveDownAnimationTime, CancellationTokenSource cts = default)
     {
@@ -94,13 +105,20 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
         }
     }
 
+    /// <summary>
+    /// テキストの点滅アニメーション
+    /// </summary>
+    /// <param name="blinkAnimationDuration">点滅にかかる時間</param>
+    /// <param name="cts">キャンセル処理用のトークン</param>
+    /// <returns></returns>
     private async UniTask BlinkTextAnimation(float blinkAnimationDuration, CancellationTokenSource cts = default)
     {
         Color textColor = _gameStartTextComponent.color;
         float alpha = 0.0f;
-        // while ループを止める変数、 テキストが表示されているかの変数
-        bool isStoped = false, isPreviewedText = false;
-        while (isStoped == false)
+        // テキストが表示されているかの変数
+        bool isPreviewedText = false;
+        // タイトルシーンがアクティブである限りループする
+        while (true)
         {
             try
             {
@@ -130,8 +148,7 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
             }
             catch (Exception)
             {
-                isStoped = true;
-                break;
+                continue;
             }
         }
 

@@ -45,7 +45,6 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     {
         _gameTime = _setGameTime;
         _countInterval = 0.0f;
-        _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
         for (int i = 0; i < _spawningNumberOfTargets; i++)
         {
             SpawnTarget();
@@ -59,6 +58,7 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     private void InitGame()
     {
         _cannon = Instantiate(_cannon, Vector3.up / 2, Quaternion.identity);
+        _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
         BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
         bulletPool.InitObjectPool();
         _targetPool.InitObjectPool();
@@ -66,8 +66,8 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
 
     private void CallCountGameTime()
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
-        CountGameTime(cts).Forget();
+        CancellationTokenSource countGameTimeToken = new CancellationTokenSource();
+        CountGameTime(countGameTimeToken).Forget();
     }
 
     /// <summary>
@@ -94,12 +94,12 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
             }
             catch (MissingReferenceException)
             {
-                cts.Cancel();
                 continue;
             }
         }
         // 半端な値になるため、ループを抜けたら 0 を代入
         _gameTime = 0.0f;
+        SceneStateManager.Instance.ChangeScene(SceneState.ResultScene);
     }
 
     /// <summary>

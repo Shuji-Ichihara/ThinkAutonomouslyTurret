@@ -104,7 +104,6 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
             catch (NullReferenceException)
             {
                 isReleasedkey = true;
-                cts.Cancel();
                 continue;
             }
         }
@@ -115,7 +114,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// </summary>
     private void CallShotBullet()
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
-        ShotBullet(cts).Forget();
+        CancellationTokenSource shotBulletToken = new CancellationTokenSource();
+        ShotBullet(shotBulletToken).Forget();
     }
 }

@@ -49,14 +49,27 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
     void Update()
     {
         _timeText.text = string.Format("{0:#}", GameSceneManager.Instance.GameTime);
-        _scoreText.text = "Score : " + GameSceneManager.Instance.GameScore.ToString();
+        _scoreText.text = GameSceneManager.Instance.GameScore.ToString() + " 点";
     }
 
     /// <summary>
-    /// テキストの設定初期化
+    /// テキストの初期設定
     /// </summary>
     private void SetUpText()
     {
+        // テキストの null チェック
+        if (_timeText == null) { _timeText = GameObject.Find("Time").GetComponent<TextMeshProUGUI>(); }
+        if (_scoreText == null) { _scoreText = GameObject.Find("Score").GetComponent<TextMeshProUGUI>(); }
+        if (_popUpDamageText == null)
+        {
+            var obj = Resources.Load("Prefabs/PopUpDamegeText") as GameObject;
+            _popUpDamageText = obj.GetComponent<TextMeshProUGUI>();
+        }
+        if (_popUpScoreText == null)
+        {
+            var obj = Resources.Load("Prefabs/PopUpScoreText") as GameObject;
+            _popUpScoreText = obj.GetComponent<TextMeshProUGUI>();
+        }
         _timeText.fontSize = 120.0f;
         _scoreText.fontSize = 80.0f;
         _timeText.alignment = TextAlignmentOptions.Center;
@@ -84,7 +97,7 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
                 , textComponent.transform.position
                 , null
                 , out var vector2);
-            // ゲームの仕様上、的は画面の中央に存在する為、やや右上にテキストを配置
+            // ゲームの仕様上、的は画面の中央に存在する為やや右上にテキストを配置
             textComponentTransform.position += (Vector3.up + Vector3.right);
             await TextAnimation(textComponentTransform, token: this.GetCancellationTokenOnDestroy());
         }
@@ -146,7 +159,7 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
             }
             catch (Exception)
             {
-                break;
+                return;
             }
         }
         Destroy(rectTransform.gameObject);

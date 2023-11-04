@@ -25,6 +25,7 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     [SerializeField]
     private float _spawningIntervalTime = 5.0f;
     private float _countInterval = 0.0f;
+    private readonly float _durationTime = 3.0f;
     #endregion
     #region Score
     // スコア
@@ -99,6 +100,7 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
         }
         // 半端な値になるため、ループを抜けたら 0 を代入
         _gameTime = 0.0f;
+        await UniTask.WaitForSeconds(_durationTime, cancellationToken: cts.Token);
         SceneStateManager.Instance.ChangeScene(SceneState.ResultScene);
     }
 

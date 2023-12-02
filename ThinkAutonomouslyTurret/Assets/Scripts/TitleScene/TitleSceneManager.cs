@@ -2,7 +2,7 @@
 
 public class TitleSceneManager : SingletonMonoBehaviour<TitleSceneManager>
 {
-    // シーン変更可能フラグ
+    // シーン遷移が可能になるフラグ
     private bool _isChangedScene = false;
 
     // Update is called once per frame

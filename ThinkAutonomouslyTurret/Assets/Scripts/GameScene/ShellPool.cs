@@ -1,14 +1,21 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool
+public class ShellPool : SingletonMonoBehaviour<ShellPool>, IObjectPool
 {
     [SerializeField]
-    private GameObject _bullet = null;
+    private GameObject _shell = null;
 
     private List<PoolingObject> _poolingObjects = new List<PoolingObject>();
     // 備蓄しておく Prefab の個数
     private const int _max = 50;
+
+    new private void Awake()
+    {
+        // null チェック
+        if (_shell == null)
+            _shell = Resources.Load("prefabs/Shell") as GameObject;
+    }
 
     /// <summary>
     /// 弾のオブジェクトプール生成
@@ -18,8 +25,8 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool
         PoolingObject poolingObject;
         for (int i = 0; i < _max; i++)
         {
-            poolingObject = Instantiate(_bullet, transform).GetComponent<PoolingObject>();
-            _bullet.SetActive(false);
+            poolingObject = Instantiate(_shell, transform).GetComponent<PoolingObject>();
+            _shell.SetActive(false);
             _poolingObjects.Add(poolingObject);
         }
     }
@@ -42,7 +49,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool
             }
         }
         // 万一、プール内のオブジェクトが不足した場合、新しく生成しプールに加える
-        poolingObject = Instantiate(_bullet, transform).GetComponent<PoolingObject>();
+        poolingObject = Instantiate(_shell, transform).GetComponent<PoolingObject>();
         poolingObject.InitObject(spawnPosition);
         _poolingObjects.Add(poolingObject);
     }

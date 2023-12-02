@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Bullet : MonoBehaviour
+public class Shell : MonoBehaviour
 {
     #region Move
     // Bullet に加える力
@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
     /// </summary>
     private void MoveBullet()
     {
-        _rb.AddForce(CannonController.Instance.BulletSpawnPoint.up * _bulletMoveForce, ForceMode.Impulse);
+        _rb.AddForce(CannonController.Instance.ShellSpawnPoint.up * _bulletMoveForce, ForceMode.Impulse);
         _moveBulletDistance = Vector3.Distance(transform.position, GameSceneManager.Instance.Cannon.transform.position);
         // Cannon との距離が離れたら非アクティブ化する
         if (_moveBulletDistance > 200.0f)

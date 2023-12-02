@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
 {
+    #region Refarences
     // タイトルのテキストコンポーネント
     [SerializeField]
     private TextMeshProUGUI _titleTextComponent = null;
@@ -24,6 +25,7 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
     // 点滅アニメーションの再生時間
     [SerializeField]
     private float _blinkAnimationTime = 5.0f;
+    #endregion
 
     // タイトルテキストのフォントサイズ
     private readonly float _titleFontSize = 180.0f;
@@ -37,13 +39,13 @@ public class TitleUIManager : SingletonMonoBehaviour<TitleUIManager>
     // Start is called before the first frame update
     private async void Start()
     {
-        // UICamera の null チェック
+        // null チェック
         var canvas = GameObject.Find("TitleSceneCanvas").GetComponent<Canvas>();
         var uiCamera = canvas.worldCamera;
-        if(uiCamera == null)
+        if(canvas.worldCamera == null || uiCamera == null)
         {
-            var camera = GameObject.Find("UICamera").GetComponent<Camera>();
-            canvas.worldCamera = camera;
+            uiCamera= GameObject.Find("UICamera").GetComponent<Camera>();
+            canvas.worldCamera = uiCamera;
         }
         SetUpText();
         await MoveDownTextAnimation(_movedownAnimationTime, _titleAnimationToken);

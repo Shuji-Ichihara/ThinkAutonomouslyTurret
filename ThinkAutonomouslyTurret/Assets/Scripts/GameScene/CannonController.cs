@@ -7,16 +7,16 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
 {
     #region Refarence
     // 弾を発射する座標
+    public Transform ShellSpawnPoint => _shellSpawnPoint;
     [SerializeField]
-    private Transform _bulletSpawnPoint = null;
-    public Transform BulletSpawnPoint => _bulletSpawnPoint;
+    private Transform _shellSpawnPoint = null;
     // 砲台のピボット
     [SerializeField]
-    private Transform _CannonPivot = null;
+    private Transform _cannonPivot = null;
+    public Transform BurralRoot => _burralRoot;
     // 砲身のピボット
     [SerializeField]
     private Transform _burralRoot = null;
-    public Transform BurralRoot => _burralRoot;
     #endregion
     #region MoveSpeed
     // 砲台が回転するスピード
@@ -27,13 +27,29 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     private float _burarlRotateSpeed = 5.0f;
     #endregion
     // 弾のオブジェクトプール
-    private BulletPool _bulletPool = null;
+    private ShellPool _shellPool = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
-        CallShotBullet();
+        // null チェック
+        if(_shellSpawnPoint == null)
+        {
+            GameObject obj = GameObject.Find("ShellSpawnPoint");
+            _shellSpawnPoint = obj.GetComponent<Transform>();
+        }
+        if(_cannonPivot == null)
+        {
+            GameObject obj = GameObject.Find("CannonPivot");
+            _cannonPivot = obj.GetComponent<Transform>();
+        }
+        if(_burralRoot == null)
+        {
+            GameObject obj = GameObject.Find("BurralRoot");
+            _burralRoot = obj.GetComponent<Transform>();
+        }
+        _shellPool = GameObject.Find("ShellPool").GetComponent<ShellPool>();
+        CallShotShell();
     }
 
     // Update is called once per frame
@@ -50,11 +66,11 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     {
         if (Input.GetKey(KeyCode.A))
         {
-            _CannonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.down);
+            _cannonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.down);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            _CannonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.up);
+            _cannonPivot.rotation *= Quaternion.AngleAxis(_canonRotateSpeed * Time.deltaTime, Vector3.up);
         }
     }
 
@@ -88,7 +104,7 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// 弾を発射する
     /// </summary>
     /// <param name="cts">キャンセル処理用のトークン</param>
-    private async UniTask ShotBullet(CancellationTokenSource cts = default)
+    private async UniTask ShotShell(CancellationTokenSource cts = default)
     {
         while (GameSceneManager.Instance.GameTime > 0.0f)
         {
@@ -96,7 +112,8 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
             {
                 if (Input.GetKey(KeyCode.Space))
                 {
-                    _bulletPool.ActivateObject(_bulletSpawnPoint.position);
+                    AudioManager.Instance.PlaySE(SEType.ShotShell);
+                    _shellPool.ActivateObject(_shellSpawnPoint.position);
                 }
                 await UniTask.WaitForSeconds(Time.fixedDeltaTime * 5, cancellationToken: cts.Token);
             }
@@ -110,9 +127,9 @@ public class CannonController : SingletonMonoBehaviour<CannonController>
     /// <summary>
     /// ShotBullet を呼び出す
     /// </summary>
-    private void CallShotBullet()
+    private void CallShotShell()
     {
-        CancellationTokenSource shotBulletToken = new CancellationTokenSource();
-        ShotBullet(shotBulletToken).Forget();
+        CancellationTokenSource shotShellToken = new CancellationTokenSource();
+        ShotShell(shotShellToken).Forget();
     }
 }

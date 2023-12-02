@@ -37,7 +37,7 @@ public class ResultUIManager : SingletonMonoBehaviour<ResultUIManager>
     [SerializeField]
     private float _playerTextFontSize = 80.0f;
     [SerializeField]
-    private float _scoreTextFontSize = 120.0f;
+    private float _scoreTextFontSize = 480.0f;
     [SerializeField]
     private float _returnToStartTextFontSize = 80.0f;
     #endregion

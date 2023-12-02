@@ -22,6 +22,7 @@ public enum SEType
     BreakTarget,
     CountUpScore,
     PreviewText,
+    PressKey,
 }
 
 /// <summary>

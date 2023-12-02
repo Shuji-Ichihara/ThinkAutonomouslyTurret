@@ -30,8 +30,8 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     #endregion
     #region Score
     // スコア
-    private int _gameScore = 0;
-    public int GameScore => _gameScore;
+    private static int _gameScore = 0;
+    public static int GameScore => _gameScore;
     #endregion
     // 的が一度にスポーンする個数
     [SerializeField, Range(0, 10)]
@@ -45,6 +45,11 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     // Start is called before the first frame update
     void Start()
     {
+        if(_targetPool == null)
+        {
+            GameObject obj = GameObject.Find("TargetPool");
+            _targetPool = obj.GetComponent<TargetPool>();
+        }
         _gameTime = _setGameTime;
         _countInterval = 0.0f;
         for (int i = 0; i < _spawningNumberOfTargets; i++)
@@ -59,15 +64,21 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     /// </summary>
     private void InitGame()
     {
+        // null チェック
+        if(_cannon == null)
+        {
+            _cannon = Resources.Load("Prefabs/CannonRoot") as GameObject;
+        }
         _cannon = Instantiate(_cannon, Vector3.up / 2, Quaternion.identity);
         _targetSpawnZone = GameObject.Find("TargetSpawnZone").GetComponent<Transform>();
-        BulletPool bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
-        bulletPool.InitObjectPool();
+        ShellPool shelltPool = GameObject.Find("ShellPool").GetComponent<ShellPool>();
+        shelltPool.InitObjectPool();
         _targetPool.InitObjectPool();
     }
 
     private void CallCountGameTime()
     {
+        AudioManager.Instance.PlayBGM(BGMType.GameBGM);
         CancellationTokenSource countGameTimeToken = new CancellationTokenSource();
         CountGameTime(countGameTimeToken).Forget();
     }

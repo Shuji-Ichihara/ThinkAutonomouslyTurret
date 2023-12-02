@@ -835,7 +835,7 @@ GameObject:
   - component: {fileID: 1025565457}
   - component: {fileID: 1025565456}
   m_Layer: 0
-  m_Name: BulletPool
+  m_Name: ShellPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -853,7 +853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66bef9c79c11d2f40bec5768273df1b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bullet: {fileID: 5518268995955679867, guid: 9661204f173016647b06911673ba3baa, type: 3}
+  _shell: {fileID: 5518268995955679867, guid: 9661204f173016647b06911673ba3baa, type: 3}
 --- !u!4 &1025565457
 Transform:
   m_ObjectHideFlags: 0

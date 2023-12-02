@@ -56,6 +56,7 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
         {
             SpawnTarget();
         }
+        AudioManager.Instance.PlayBGM(BGMType.GameBGM);
         CallCountGameTime();
     }
 
@@ -78,7 +79,6 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
 
     private void CallCountGameTime()
     {
-        AudioManager.Instance.PlayBGM(BGMType.GameBGM);
         CancellationTokenSource countGameTimeToken = new CancellationTokenSource();
         CountGameTime(countGameTimeToken).Forget();
     }

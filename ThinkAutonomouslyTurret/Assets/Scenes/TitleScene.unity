@@ -453,7 +453,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -270}
+  m_AnchoredPosition: {x: 0, y: -90}
   m_SizeDelta: {x: 1920, y: 270}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &672929867
@@ -676,13 +676,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1087777844}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_Father: {fileID: 1769268527}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1087777846
 AudioSource:
@@ -1048,7 +1048,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1087777845}
+  - {fileID: 1992081922}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1069,15 +1071,15 @@ MonoBehaviour:
   _bgmDataList:
   - BGMType: 0
     Clip: {fileID: 8300000, guid: 46394151d793b3f42aec7f5d59f0cf0f, type: 3}
-    Volume: 1
+    Volume: 0.2
     IsLoop: 1
   - BGMType: 1
     Clip: {fileID: 8300000, guid: 3ce64de86ee08224f8c47be536aa6d2f, type: 3}
-    Volume: 0.7
+    Volume: 0.2
     IsLoop: 1
   - BGMType: 2
     Clip: {fileID: 8300000, guid: d9a745813502d1448ac748b256595179, type: 3}
-    Volume: 0.7
+    Volume: 0.2
     IsLoop: 1
   _seDataList:
   - SeType: 0
@@ -1085,15 +1087,18 @@ MonoBehaviour:
     Volume: 1
   - SeType: 1
     Clip: {fileID: 8300000, guid: afc499f0eb7d05249b6226e6a9d541b8, type: 3}
-    Volume: 1
+    Volume: 0.2
   - SeType: 2
     Clip: {fileID: 8300000, guid: 57b1a8b1aaf658b48ad2c54d547d3818, type: 3}
-    Volume: 1
-  - SeType: 4
+    Volume: 0.8
+  - SeType: 3
     Clip: {fileID: 8300000, guid: 387221a923143f44aa2e0e5880dd6192, type: 3}
     Volume: 1
-  - SeType: 5
+  - SeType: 4
     Clip: {fileID: 8300000, guid: dd977f036ddc36a40960d61b2cd0ed1d, type: 3}
+    Volume: 1
+  - SeType: 5
+    Clip: {fileID: 8300000, guid: 487f88ef29b61cf4b819417499d1fed5, type: 3}
     Volume: 1
 --- !u!1 &1992081921
 GameObject:
@@ -1119,13 +1124,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1992081921}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_Father: {fileID: 1769268527}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1992081923
 AudioSource:

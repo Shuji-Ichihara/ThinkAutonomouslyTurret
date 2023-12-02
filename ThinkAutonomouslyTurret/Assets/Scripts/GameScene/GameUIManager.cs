@@ -32,7 +32,13 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
     // Start is called before the first frame update
     void Start()
     {
-        // UICamera の null チェック
+        // null チェック
+        if(_gameUICanvas == null)
+        {
+            GameObject obj = GameObject.Find("GameUICanvas");
+            _gameUICanvas = obj.GetComponent<Canvas>();
+
+        }
         if (_gameUICanvas.worldCamera == null || _uiCamera == null)
         {
             _uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
@@ -49,7 +55,7 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
     void Update()
     {
         _timeText.text = string.Format("{0:#}", GameSceneManager.Instance.GameTime);
-        _scoreText.text = GameSceneManager.Instance.GameScore.ToString() + " 点";
+        _scoreText.text = GameSceneManager.GameScore.ToString() + " 点";
     }
 
     /// <summary>
@@ -58,8 +64,10 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
     private void SetUpText()
     {
         // テキストの null チェック
-        if (_timeText == null) { _timeText = GameObject.Find("Time").GetComponent<TextMeshProUGUI>(); }
-        if (_scoreText == null) { _scoreText = GameObject.Find("Score").GetComponent<TextMeshProUGUI>(); }
+        if (_timeText == null) 
+            _timeText = GameObject.Find("Time").GetComponent<TextMeshProUGUI>(); 
+        if (_scoreText == null)  
+            _scoreText = GameObject.Find("Score").GetComponent<TextMeshProUGUI>(); 
         if (_popUpDamageText == null)
         {
             var obj = Resources.Load("Prefabs/PopUpDamegeText") as GameObject;

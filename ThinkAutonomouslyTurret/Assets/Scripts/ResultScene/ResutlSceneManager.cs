@@ -10,6 +10,7 @@ public class ResutlSceneManager : SingletonMonoBehaviour<ResutlSceneManager>
     {
         if (Input.GetKeyDown(KeyCode.Space) && _isActivatedChangeScene == true)
         {
+            AudioManager.Instance.PlaySE(SEType.PressKey);
             SceneStateManager.Instance.ChangeScene(SceneState.TitleScene);
             _isActivatedChangeScene = false;
         }

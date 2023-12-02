@@ -16,17 +16,18 @@ public class Target : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        var bullet = other.gameObject.GetComponent<Bullet>();
-        HitBullet(bullet);
+        var shell = other.gameObject.GetComponent<Shell>();
+        if(shell != null)
+            HitShell(shell);
     }
 
     /// <summary>
     /// 的を破壊したらスコア上昇
     /// </summary>
-    /// <param name="bullet">Bullet スクリプト</param>
-    private void HitBullet(Bullet bullet)
+    /// <param name="shell">Bullet スクリプト</param>
+    private void HitShell(Shell shell)
     {
-        int damage = bullet.Damage;
+        int damage = shell.Damage;
         _endurancePoint -= damage;
         if (_endurancePoint < 0)
         {

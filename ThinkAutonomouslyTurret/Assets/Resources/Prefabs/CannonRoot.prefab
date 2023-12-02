@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3150076141677884635}
   m_Layer: 8
-  m_Name: BulletSpawnPoint
+  m_Name: ShellSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,8 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d66cc82cec8075f46a0e2c7e156885e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletSpawnPoint: {fileID: 3150076141677884635}
-  _CannonPivot: {fileID: 3150076141711748212}
+  _shellSpawnPoint: {fileID: 3150076141677884635}
+  _cannonPivot: {fileID: 3150076141711748212}
   _burralRoot: {fileID: 3150076142920835325}
   _canonRotateSpeed: 90
   _burarlRotateSpeed: 20

@@ -114,7 +114,9 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
         }
         // 半端な値になるため、ループを抜けたら 0 を代入
         _gameTime = 0.0f;
+        GameUIManager.Instance.PreviewGameSetText();
         await UniTask.WaitForSeconds(_durationTime, cancellationToken: cts.Token);
+        AudioManager.Instance.StopBGM();
         SceneStateManager.Instance.ChangeScene(SceneState.ResultScene);
     }
 
@@ -125,6 +127,7 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     public void CountUpScore(int score)
     {
         _gameScore += score;
+        AudioManager.Instance.PlaySE(SEType.CountUpScore);
     }
 
     /// <summary>

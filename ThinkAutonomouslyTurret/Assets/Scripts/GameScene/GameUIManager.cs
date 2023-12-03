@@ -19,6 +19,9 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
     // 制限時間を表示するテキスト
     [SerializeField]
     private TextMeshProUGUI _timeText = null;
+    // ゲーム終了を告知するテキスト
+    [SerializeField]
+    private TextMeshProUGUI _gameSetText = null;
     // ポップアップするテキスト(的へのダメージ)
     [SerializeField]
     private TextMeshProUGUI _popUpDamageText = null;
@@ -27,7 +30,7 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
     private TextMeshProUGUI _popUpScoreText = null;
     #endregion
 
-    //public Subject<GameObject> PopUpText = new Subject<GameObject>();
+    private readonly string _gameSetMessage = "終了 !!";
 
     // Start is called before the first frame update
     void Start()
@@ -67,7 +70,9 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
         if (_timeText == null) 
             _timeText = GameObject.Find("Time").GetComponent<TextMeshProUGUI>(); 
         if (_scoreText == null)  
-            _scoreText = GameObject.Find("Score").GetComponent<TextMeshProUGUI>(); 
+            _scoreText = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
+        if (_gameSetText == null)
+            _gameSetText = GameObject.Find("GameSetText").GetComponent<TextMeshProUGUI>();
         if (_popUpDamageText == null)
         {
             var obj = Resources.Load("Prefabs/PopUpDamegeText") as GameObject;
@@ -80,11 +85,26 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
         }
         _timeText.fontSize = 120.0f;
         _scoreText.fontSize = 80.0f;
+        _gameSetText.fontSize = 240.0f;
         _timeText.alignment = TextAlignmentOptions.Center;
         _scoreText.alignment = TextAlignmentOptions.Top;
+        _gameSetText.alignment = TextAlignmentOptions.Center;
         _popUpDamageText.color = Color.black;
         _popUpScoreText.color = Color.black;
+        _gameSetText.color = Color.black;
         _popUpScoreText.rectTransform.pivot = Vector2.one;
+        // GameSetText のテキストを設定
+        _gameSetText.text = _gameSetMessage;
+        _gameSetText.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// GameSetText を表示する
+    /// </summary>
+    public void PreviewGameSetText()
+    {
+        if (GameSceneManager.Instance.GameTime <= 0.0f)
+            _gameSetText.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -130,7 +150,7 @@ public class GameUIManager : SingletonMonoBehaviour<GameUIManager>
             textComponentTransform.anchoredPosition = Vector2.right * textComponentTransform.anchoredPosition + Vector2.down * _scoreText.rectTransform.rect.height;
             await TextAnimation(textComponentTransform, 2.0f, this.GetCancellationTokenOnDestroy());
         }
-        catch
+        catch(Exception)
         {
             throw;
         }

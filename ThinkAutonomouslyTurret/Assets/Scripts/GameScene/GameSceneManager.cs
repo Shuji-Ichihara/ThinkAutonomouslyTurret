@@ -30,8 +30,8 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     #endregion
     #region Score
     // スコア
-    private static int _gameScore = 0;
     public static int GameScore => _gameScore;
+    private static int _gameScore = 0;
     #endregion
     // 的が一度にスポーンする個数
     [SerializeField, Range(0, 10)]
@@ -56,6 +56,8 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
         {
             SpawnTarget();
         }
+        // 得点を初期化
+        _gameScore = 0;
         AudioManager.Instance.PlayBGM(BGMType.GameBGM);
         CallCountGameTime();
     }

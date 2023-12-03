@@ -681,8 +681,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1769268527}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1087777846
 AudioSource:
@@ -946,10 +946,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6760d243f60ae294aaeb9c5bb8adffa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _titleTextComponent: {fileID: 672929867}
-  _titleText: "\u81EA\u5F8B\u601D\u8003\u578B\u56FA\u5B9A\u7832\u53F0"
-  _gameStartTextComponent: {fileID: 304814631}
-  _gameStartText: "Space \u3092\u62BC\u3057\u305F\u3089\u30B9\u30BF\u30FC\u30C8"
+  _titleText: {fileID: 672929867}
+  _gameStartText: {fileID: 304814631}
+  _titleMessage: "\u81EA\u5F8B\u601D\u8003\u578B\u56FA\u5B9A\u7832\u53F0"
+  _gameStartMessage: "Spece \u3092\u62BC\u3057\u305F\u3089\u30B9\u30BF\u30FC\u30C8"
   _movedownAnimationTime: 90
   _blinkAnimationTime: 5
 --- !u!1 &1296468370
@@ -1048,9 +1048,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1087777845}
-  - {fileID: 1992081922}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1129,8 +1127,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1769268527}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1992081923
 AudioSource:

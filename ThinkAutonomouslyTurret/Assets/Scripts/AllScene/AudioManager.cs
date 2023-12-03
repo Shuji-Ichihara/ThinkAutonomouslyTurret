@@ -72,8 +72,15 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     [SerializeField]
     private List<SEData> _seDataList = new List<SEData>();
 
-    new private void Awake()
+    private void Start()
     {
+        // null チェック
+        if (_bgmAudioSource == null)
+            _bgmAudioSource = GameObject.Find("BGMSource").GetComponent<AudioSource>();
+        if (_seAudioSource == null)
+            _seAudioSource = GameObject.Find("SESource").GetComponent<AudioSource>();
+        _bgmAudioSource.transform.SetParent(transform);
+        _seAudioSource.transform.SetParent(transform);
         DontDestroyOnLoad(gameObject);
     }
 

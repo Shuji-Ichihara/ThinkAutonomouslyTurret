@@ -59,18 +59,22 @@ public struct SEData
 
 public class AudioManager : SingletonMonoBehaviour<AudioManager>
 {
+    #region Refarences
     // BGM を再生するソース
     [SerializeField]
     private AudioSource _bgmAudioSource = null;
     // SE を再生するソース
     [SerializeField]
     private AudioSource _seAudioSource = null;
+    #endregion
+    #region AudioData
     // BGM データのリスト
     [SerializeField]
     private List<BGMData> _bgmDataList = new List<BGMData>();
     // SE データのリスト
     [SerializeField]
     private List<SEData> _seDataList = new List<SEData>();
+    #endregion
 
     private void Start()
     {
@@ -95,6 +99,14 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         _bgmAudioSource.volume = bgmData.Volume;
         _bgmAudioSource.loop = bgmData.IsLoop;
         _bgmAudioSource.Play();
+    }
+
+    /// <summary>
+    /// BGM の再生をを停止
+    /// </summary>
+    public void StopBGM()
+    {
+        _bgmAudioSource.Stop();
     }
 
     /// <summary>

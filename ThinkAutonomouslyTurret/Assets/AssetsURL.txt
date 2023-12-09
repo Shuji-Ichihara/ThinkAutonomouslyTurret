@@ -1,0 +1,32 @@
+使用アセット
+
+フォント
+Note Sans JP
+    https://fonts.google.com/noto/specimen/Noto+Sans+JP
+
+音声
+Springin' Sound Stock : https://www.springin.org/sound-stock/
+・大砲が動く音
+    大型ロボットの駆動音３
+
+効果音工房 : https://umipla.com/
+・発砲音 SE
+    大砲ドカーンの効果音
+・的の破壊音 SE
+    爆発07の効果音
+・スコア上昇 SE
+    決定音-11の効果音
+    
+効果音ラボ : https://soundeffect-lab.info/
+・テキスト表示の音
+    メニューを開く3
+・ボタン
+    決定ボタンを押す11
+
+魔王魂 : https://maou.audio/
+・タイトル BGM
+    サイバー44
+・ゲーム内 BGM
+    サイバー35
+・リザルト BGM
+    サイバー4

@@ -26,10 +26,12 @@ public class SceneStateManager : SingletonMonoBehaviour<SceneStateManager>
         SceneStatus = SceneState.TitleScene;
     }
 
+    /*
     private void Update()
     {
         QuitApplication();
     }
+    */
 
     /// <summary>
     /// シーン遷移
